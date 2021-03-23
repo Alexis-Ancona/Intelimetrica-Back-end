@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+
 # Restaurant table schema:
 # Restaurants (
 #             id TEXT PRIMARY KEY, -- Unique Identifier of Restaurant
@@ -13,7 +14,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 #             state TEXT,
 #             lat FLOAT, -- Latitude
 #             lng FLOAT) -- Longitude
-
 
 class Restaurants(models.Model):
     id = models.CharField(max_length = 50, primary_key = True, unique = True)
