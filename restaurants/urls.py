@@ -17,5 +17,14 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.RestaurantList, name = 'index')
+    #restaurants/               List View
+    path('', views.RestaurantList),
+    #restaurants/detail/<pk>    Detail View
+    path('detail/<str:pk>', views.RestaurantDetail),
+    #restaurants/create         Create View
+    path('create/', views.RestaurantCreate),
+    #restaurants/update/<pk>    Update View
+    path('update/<str:pk>', views.RestaurantUpdate),
+    #restaurants/delete/<pk>    Delete View
+    path('delete/<str:pk>', views.RestaurantDelete),
 ]
