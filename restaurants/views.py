@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from geopy import distance
+import statistics as estadistica
 
 from .models import Restaurants
 from .serializers import RestaurantSerializer
@@ -60,43 +61,39 @@ def RestaurantID(request, pk):
 
 
 #EXAMPLE: ?latitude=19.4423123&longitude=-99.12712398&radius=600
-# @api_view(['GET'])
-# def statistics(request):
-#     if request.method == 'GET':
+@api_view(['GET'])
+def statistics(request):
+    latitude = float(request.GET.get('latitude'))
+    longitude = float(request.GET.get('longitude'))
+    radius = float(request.GET.get('radius'))
+    restaurantList = Restaurants.objects.all()
+    distancias = []
+    ratings = []
+    count = 0
+    avg = 0
+    std = 0
+    acum = 0
+    for restaurant in restaurantList:
+        rest1C = (latitude,longitude)
+        rest2C = (restaurant.lat, restaurant.lng)
+        distancia = distance.distance(rest1C, rest2C).m
+        distancias.append(distancia)
+        if distancia <= radius:
+            count += 1
+            acum = acum + restaurant.rating
+            avg = acum / count
+            ratings.append(restaurant.rating)
+        if count > 1 :
+            std = estadistica.stdev(ratings)
+    
+    ctx = {
+            "count": count,
+            "avg": avg,
+            "std": std
+            }
+    return Response(ctx)
 
-#         # Save lat, lng and radius coming from Url 
-#         latitude = float(request.GET.get('latitude'))
-#         longitude = float(request.GET.get('longitude'))
-#         radius = float(request.GET.get('radius'))
-#         # make a list of restaurants to iterate through all the coordinates
-#         restaurantList = Restaurants.objects.all()
 
-#         distancias = []
-#         ratings = []
-#         count = 0
-#         avg = 0
-#         std = 0
-#         acum = 0
-#         for restaurant in restaurantList:
-#             rest1C = (latitude,longitude)
-#             rest2C = (restaurant.lat, restaurant.lng)
-#             distancia = distance.distance(rest1C, rest2C).m
-#             distancias.append(distancia)
-#             if distancia <= radius:
-#                 count += 1
-#                 acum = acum + restaurant.rating
-#                 avg = acum / count
-#                 ratings.append(restaurant.rating)
-#             if count > 1 :
-#                 std = statistics.stdev(ratings)
-        
-#         ctx = {
-#                 "count": count,
-#                 "avg": avg,
-#                 "std": std
-#                 }
-#         return Response(ctx)
-#     return Response(status = status.HTTP_400_BAD_REQUEST)
 # JSON EXAMPLE
 # {
 #     "id" : "8",

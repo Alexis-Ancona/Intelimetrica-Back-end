@@ -19,8 +19,9 @@ from . import views
 urlpatterns = [
     #restaurants/  GET|POST|DELETE  
     path('', views.RestaurantList),
+    path('statistics/', views.statistics),
     #restaurants/<pk>  GET|PUT|DELETE
     path('<str:pk>/', views.RestaurantID),
 
-    #path('statistics/', views.statistics),
+    
 ]
