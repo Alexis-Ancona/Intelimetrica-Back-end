@@ -17,14 +17,10 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    #restaurants/               List View
+    #restaurants/  GET|POST|DELETE  
     path('', views.RestaurantList),
-    #restaurants/detail/<pk>    Detail View
-    path('detail/<str:pk>', views.RestaurantDetail),
-    #restaurants/create         Create View
-    path('create/', views.RestaurantCreate),
-    #restaurants/update/<pk>    Update View
-    path('update/<str:pk>', views.RestaurantUpdate),
-    #restaurants/delete/<pk>    Delete View
-    path('delete/<str:pk>', views.RestaurantDelete),
+    #restaurants/<pk>  GET|PUT|DELETE
+    path('<str:pk>/', views.RestaurantID),
+
+    path('statistics/', views.statistics),
 ]

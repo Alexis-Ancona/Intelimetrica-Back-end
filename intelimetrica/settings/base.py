@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'restaurants',
+    #extensions
+    'django_extensions',
     'rest_framework',
 ]
 
