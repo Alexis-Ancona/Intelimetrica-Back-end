@@ -19,6 +19,7 @@ from . import views
 urlpatterns = [
     #restaurants/  GET|POST|DELETE  
     path('', views.RestaurantList),
+    #restaurants/statistics     GET
     path('statistics/', views.statistics),
     #restaurants/<pk>  GET|PUT|DELETE
     path('<str:pk>/', views.RestaurantID),

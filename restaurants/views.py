@@ -63,35 +63,44 @@ def RestaurantID(request, pk):
 #EXAMPLE: ?latitude=19.4423123&longitude=-99.12712398&radius=600
 @api_view(['GET'])
 def statistics(request):
-    latitude = float(request.GET.get('latitude'))
-    longitude = float(request.GET.get('longitude'))
-    radius = float(request.GET.get('radius'))
-    restaurantList = Restaurants.objects.all()
-    distancias = []
-    ratings = []
-    count = 0
-    avg = 0
-    std = 0
-    acum = 0
-    for restaurant in restaurantList:
-        rest1C = (latitude,longitude)
-        rest2C = (restaurant.lat, restaurant.lng)
-        distancia = distance.distance(rest1C, rest2C).m
-        distancias.append(distancia)
-        if distancia <= radius:
-            count += 1
-            acum = acum + restaurant.rating
-            avg = acum / count
-            ratings.append(restaurant.rating)
-        if count > 1 :
-            std = estadistica.stdev(ratings)
-    
-    ctx = {
-            "count": count,
-            "avg": avg,
-            "std": std
-            }
-    return Response(ctx)
+    if request.method == 'GET':
+        try:
+            # Get latitude, longitude and radius from Url
+            latitude = float(request.GET.get('latitude'))
+            longitude = float(request.GET.get('longitude'))
+            radius = float(request.GET.get('radius'))
+        except: return Response(status = status.HTTP_400_BAD_REQUEST)
+        # Make a list of restaurants so we can iterate through all objects in the DB
+        restaurantList = Restaurants.objects.all()
+        # Creates a list of ratings so we can pass this list as a parameter to stdev function
+        ratings = []
+        count = 0
+        avg = 0
+        std = 0
+        acum = 0
+        #Iterate through all objects
+        for restaurant in restaurantList:
+            rest1C = (latitude,longitude)
+            rest2C = (restaurant.lat, restaurant.lng)
+            # distance function recieves as parameters a copule of coordinates, lat and lng of point 1 and point 2 and calculates the geographical distance between them
+            distancia = distance.distance(rest1C, rest2C).m
+            # If the distance is less than the radius it means the restaurant is inside this "virtual circle", so we add a 1 to count and calculate the average
+            if distancia <= radius:
+                count += 1
+                acum = acum + restaurant.rating
+                avg = acum / count
+                ratings.append(restaurant.rating)
+            # We have to specify that "if count is grater than 1" because stdev function needs at least 2 values to work
+            if count > 1 :
+                std = estadistica.stdev(ratings)
+        
+        ctx = {
+                "count": count, # Count of restaurants that fall inside the circle with center [x,y] y radius z,
+                "avg": avg,     # Average rating of restaurant inside the circle,
+                "std": std      # Standard deviation of rating of restaurants inside the circle
+                }
+        return Response(ctx)
+    return Response(status = status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 # JSON EXAMPLE
