@@ -22,5 +22,5 @@ urlpatterns = [
     #restaurants/<pk>  GET|PUT|DELETE
     path('<str:pk>/', views.RestaurantID),
 
-    path('statistics/', views.statistics),
+    #path('statistics/', views.statistics),
 ]
