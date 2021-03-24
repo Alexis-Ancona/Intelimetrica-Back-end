@@ -2,7 +2,8 @@ import csv  # How to use cvs https://docs.python.org/3/library/csv.html
 
 # How to use 'runscript' using django extensions: https://django-extensions.readthedocs.io/en/latest/runscript.html
 
-# to wipe out and put all data from restaurantes.csv into the database just run "python manage.py runscript restaurant_load" in the terminal
+# to wipe out and put all data from restaurantes.csv into the database just run:
+# "python manage.py runscript restaurant_load" in the terminal
 
 from restaurants.models import Restaurants
 
